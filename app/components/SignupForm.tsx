@@ -45,6 +45,7 @@ const SignupForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(defaultErrorValue);
+
     if (userInput.id.trim().length === 0) {
       setError((prev) => ({ ...prev, id: { msg: errorMsg.value } }));
 
@@ -139,6 +140,10 @@ const SignupForm: React.FC = () => {
       }));
 
       return;
+    }
+
+    if (localStorage.get("users")) {
+      localStorage.clear();
     }
     localStorage.setItem("users", JSON.stringify(userInput));
   };
