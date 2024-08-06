@@ -1,7 +1,7 @@
 "use client";
 import classes from "./SignupForm.module.css";
-import React, { ChangeEvent, useState } from "react";
-import { isValidEmail, isValidPassword } from "./util";
+import React, {ChangeEvent, useCallback, useState} from "react";
+import {deepCopy, isValidEmail, isValidPassword} from "./util";
 
 const errorMsg = {
   value: "값을 입력해주세요.",
@@ -42,94 +42,66 @@ const SignupForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    setError(defaultErrorValue);
+    const newErrors = deepCopy(defaultErrorValue);
 
     if (userInput.id.trim().length === 0) {
-      setError((prev) => ({ ...prev, id: { msg: errorMsg.value } }));
+      newErrors.id.msg = errorMsg.value;
     }
     else if (userInput.id.trim().length < 5) {
-      setError((prev) => ({ ...prev, id: { msg: errorMsg.minStrLength } }));
+      newErrors.id.msg = errorMsg.minStrLength;
     }
     else if (15 < userInput.id.trim().length) {
-      setError((prev) => ({ ...prev, id: { msg: errorMsg.maxStrLength } }));
+      newErrors.id.msg = errorMsg.maxStrLength;
     }
 
     if (userInput.name.trim().length === 0) {
-      setError((prev) => ({ ...prev, name: { msg: errorMsg.value } }));
+      newErrors.name.msg = errorMsg.value;
     }
 
     if (
       userInput.email.trim().length > 0 &&
       !isValidEmail(userInput.email.trim())
     ) {
-      setError((prev) => ({ ...prev, email: { msg: errorMsg.invalidEmail } }));
+      newErrors.email.msg = errorMsg.invalidEmail;
     }
 
     if (userInput.password.trim().length === 0) {
-      setError((prev) => ({
-        ...prev,
-        password: { msg: errorMsg.value},
-      }));
+      newErrors.password.msg = errorMsg.value;
     }
     else if (!isValidPassword(userInput.password)) {
-      setError((prev) => ({
-        ...prev,
-        password: { msg: errorMsg.invalidPassword },
-      }));
+      newErrors.password.msg = errorMsg.invalidPassword;
     }
     else if (userInput.password.length < 8) {
-      setError((prev) => ({
-        ...prev,
-        password: { msg: errorMsg.minPwLength },
-      }));
+      newErrors.password.msg = errorMsg.minPwLength;
     }
     else if (userInput.password.length > 20) {
-      setError((prev) => ({
-        ...prev,
-        password: { msg: errorMsg.maxPwLength },
-      }));
+      newErrors.password.msg = errorMsg.maxPwLength;
     }
-
 
     if (userInput.passwordConfirm.trim().length === 0) {
-        setError((prev) => ({
-            ...prev,
-            passwordConfirm: { msg: errorMsg.value },
-        }));
+      newErrors.passwordConfirm.msg = errorMsg.value;
     }
     else if (userInput.password !== userInput.passwordConfirm) {
-      setError((prev) => ({
-        ...prev,
-        passwordConfirm: { msg: errorMsg.passwordError },
-      }));
+      newErrors.passwordConfirm.msg = errorMsg.passwordError;
     }
     else if (userInput.passwordConfirm.length < 8) {
-      setError((prev) => ({
-        ...prev,
-        passwordConfirm: { msg: errorMsg.minPwLength },
-      }));
+      newErrors.passwordConfirm.msg = errorMsg.minPwLength;
     }
     else if (userInput.passwordConfirm.length > 20) {
-      setError((prev) => ({
-        ...prev,
-        passwordConfirm: { msg: errorMsg.maxPwLength },
-      }));
+      newErrors.passwordConfirm.msg = errorMsg.maxPwLength;
     }
     else if (!isValidPassword(userInput.passwordConfirm)) {
-      setError((prev) => ({
-        ...prev,
-        passwordConfirm: { msg: errorMsg.invalidPassword },
-      }));
+      newErrors.passwordConfirm.msg = errorMsg.invalidPassword;
     }
+    setError(newErrors);
 
-
-    if (localStorage.getItem("users")) {
-      localStorage.clear();
+    if (Object.values(newErrors).every((error) => error.msg === "")) {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      localStorage.setItem("users", JSON.stringify([...users, userInput]));
     }
-    localStorage.setItem("users", JSON.stringify(userInput));
-  };
+  }, [userInput]);
 
   return (
     <>
