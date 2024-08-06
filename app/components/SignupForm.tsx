@@ -48,26 +48,16 @@ const SignupForm: React.FC = () => {
 
     if (userInput.id.trim().length === 0) {
       setError((prev) => ({ ...prev, id: { msg: errorMsg.value } }));
-
-      return;
     }
-
-    if (userInput.id.trim().length < 5) {
+    else if (userInput.id.trim().length < 5) {
       setError((prev) => ({ ...prev, id: { msg: errorMsg.minStrLength } }));
-
-      return;
     }
-
-    if (15 < userInput.id.trim().length) {
+    else if (15 < userInput.id.trim().length) {
       setError((prev) => ({ ...prev, id: { msg: errorMsg.maxStrLength } }));
-
-      return;
     }
 
     if (userInput.name.trim().length === 0) {
       setError((prev) => ({ ...prev, name: { msg: errorMsg.value } }));
-
-      return;
     }
 
     if (
@@ -75,72 +65,65 @@ const SignupForm: React.FC = () => {
       !isValidEmail(userInput.email.trim())
     ) {
       setError((prev) => ({ ...prev, email: { msg: errorMsg.invalidEmail } }));
-
-      return;
     }
 
-    if (userInput.password.length < 8) {
+    if (userInput.password.trim().length === 0) {
       setError((prev) => ({
         ...prev,
-        password: { msg: errorMsg.minPwLength },
+        password: { msg: errorMsg.value},
       }));
-
-      return;
     }
-
-    if (userInput.password.length > 20) {
-      setError((prev) => ({
-        ...prev,
-        password: { msg: errorMsg.maxPwLength },
-      }));
-
-      return;
-    }
-
-    if (!isValidPassword(userInput.password)) {
+    else if (!isValidPassword(userInput.password)) {
       setError((prev) => ({
         ...prev,
         password: { msg: errorMsg.invalidPassword },
       }));
-
-      return;
+    }
+    else if (userInput.password.length < 8) {
+      setError((prev) => ({
+        ...prev,
+        password: { msg: errorMsg.minPwLength },
+      }));
+    }
+    else if (userInput.password.length > 20) {
+      setError((prev) => ({
+        ...prev,
+        password: { msg: errorMsg.maxPwLength },
+      }));
     }
 
-    if (userInput.password !== userInput.passwordConfirm) {
+
+    if (userInput.passwordConfirm.trim().length === 0) {
+        setError((prev) => ({
+            ...prev,
+            passwordConfirm: { msg: errorMsg.value },
+        }));
+    }
+    else if (userInput.password !== userInput.passwordConfirm) {
       setError((prev) => ({
         ...prev,
         passwordConfirm: { msg: errorMsg.passwordError },
       }));
-
-      return;
     }
-
-    if (userInput.passwordConfirm.length < 8) {
+    else if (userInput.passwordConfirm.length < 8) {
       setError((prev) => ({
         ...prev,
         passwordConfirm: { msg: errorMsg.minPwLength },
       }));
-
-      return;
     }
-
-    if (userInput.passwordConfirm.length > 20) {
+    else if (userInput.passwordConfirm.length > 20) {
       setError((prev) => ({
         ...prev,
         passwordConfirm: { msg: errorMsg.maxPwLength },
       }));
-
-      return;
     }
-
-    if (!isValidPassword(userInput.passwordConfirm)) {
+    else if (!isValidPassword(userInput.passwordConfirm)) {
       setError((prev) => ({
         ...prev,
         passwordConfirm: { msg: errorMsg.invalidPassword },
       }));
-
-      return;
     }
+
 
     if (localStorage.getItem("users")) {
       localStorage.clear();
