@@ -142,7 +142,7 @@ const SignupForm: React.FC = () => {
       return;
     }
 
-    if (localStorage.get("users")) {
+    if (localStorage.getItem("users")) {
       localStorage.clear();
     }
     localStorage.setItem("users", JSON.stringify(userInput));
