@@ -8,7 +8,7 @@ const errorMsg = {
   minStrLength: "최소 5자 이상 입력해주세요.",
   maxStrLength: "최대 15자 이하로 입력해주세요.",
   minPwLength: "최소 8자 이상 입력해주세요.",
-  maxPwLength: "최소 20자 이하로 입력해주세요.",
+  maxPwLength: "최대 20자 이하로 입력해주세요.",
   invalidEmail: "이메일 형식에 맞게 입력해주세요.",
   passwordError: "비밀번호가 일치하지 않습니다.",
   invalidPassword: "영문과 숫자만 입력해주세요.",
